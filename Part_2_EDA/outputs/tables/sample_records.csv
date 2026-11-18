@@ -1,0 +1,9 @@
+partition,trip_id,file_type,longitude,latitude,timestamp_s,from_node_id,to_node_id,arc_id
+train,00000001,.track,8.595203,49.844053,1.0,,,
+train,00000001,.track,8.595294,49.844441,2.0,,,
+train,00000001,.nodes,8.581679,49.85788,,,,
+train,00000001,.nodes,8.584637,49.858295,,,,
+train,00000001,.arcs,,,,0.0,281.0,
+train,00000001,.arcs,,,,0.0,1.0,
+train,00000001,.route,,,,,,2641.0
+train,00000001,.route,,,,,,64973.0

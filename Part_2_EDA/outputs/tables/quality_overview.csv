@@ -1,0 +1,16 @@
+check,count
+"Malformed records, all supplied partitions",0
+"Missing files, all supplied partitions",0
+"Missing parsed cells, all supplied partitions",0
+Training invalid coordinate rows,0
+Training duplicate complete GPS rows,0
+Training duplicate node rows beyond first occurrence,89
+Training duplicate arc rows beyond first occurrence,1775
+Training one-second GPS intervals,201053
+Training other GPS intervals,7284
+Training repeated consecutive locations,6
+Training non-increasing timestamp steps,0
+Training intervals > 5 seconds,1216
+Training invalid arc endpoints,0
+Training invalid route arc IDs,0
+Training disconnected consecutive route pairs,13
