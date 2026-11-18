@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="PathSnap route reconstruction evaluator interface" />
+    <title>PathSnap | Route Reconstruction</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIINfQ7kyCOc1K5e5r3BkuT2yA+8N4i3Y="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand" aria-label="PathSnap home">
+          <span class="brand-mark" aria-hidden="true">⌁</span>
+          <div>
+            <p class="eyebrow">GPS MAP MATCHING</p>
+            <h1>PathSnap</h1>
+          </div>
+        </div>
+        <div class="connection-status" id="connectionStatus" role="status">
+          <span class="status-dot"></span>
+          <span>Demo data</span>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <p class="eyebrow">EVALUATION CONSOLE</p>
+          <h2>Reconstruct a trip from noisy GPS signals.</h2>
+          <p class="hero-copy">
+            Select an evaluation trip to compare the observed trajectory with the
+            HMM-decoded route returned by the PathSnap API.
+          </p>
+        </div>
+        <div class="method-chip">Classifier + HMM / Viterbi</div>
+      </section>
+
+      <section class="workspace" aria-label="Route reconstruction workspace">
+        <aside class="control-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">01 / SELECT A TRIP</p>
+            <h3>Evaluation trips</h3>
+            <p>Choose one of the ten reserved trips.</p>
+          </div>
+          <div class="trip-grid" id="tripList" aria-label="Available evaluation trips"></div>
+          <button class="run-button" id="runButton" type="button">
+            <span class="play-icon" aria-hidden="true">▶</span>
+            Reconstruct route
+          </button>
+          <p class="request-note" id="requestNote">Ready to run trip 00000000.</p>
+
+          <div class="legend" aria-label="Map legend">
+            <p class="eyebrow">MAP LAYERS</p>
+            <div><span class="legend-swatch gps"></span>Observed GPS</div>
+            <div><span class="legend-swatch route"></span>Decoded route</div>
+            <div><span class="legend-swatch node"></span>Start / finish</div>
+          </div>
+        </aside>
+
+        <section class="map-panel" aria-label="Route map">
+          <div class="map-toolbar">
+            <div>
+              <p class="eyebrow">02 / RECONSTRUCTED ROUTE</p>
+              <h3 id="mapTripTitle">Trip 00000000</h3>
+            </div>
+            <span class="map-badge" id="routeStatus">Awaiting run</span>
+          </div>
+          <div id="map" aria-label="Interactive map showing GPS observations and decoded route"></div>
+          <p class="map-caption" id="mapCaption">Select a trip and run the reconstruction pipeline.</p>
+        </section>
+      </section>
+
+      <section class="results-section" aria-label="Evaluation results">
+        <div class="results-heading">
+          <div>
+            <p class="eyebrow">03 / RESULTS</p>
+            <h3>Inference summary</h3>
+          </div>
+          <p id="updatedAt">No inference run yet</p>
+        </div>
+        <div class="metric-grid" id="metrics" aria-live="polite"></div>
+      </section>
+
+      <section class="technical-details" aria-label="Technical details">
+        <div>
+          <p class="eyebrow">DECODER NOTES</p>
+          <p id="decoderNote">The decoder will select a route after the API returns candidate scores.</p>
+        </div>
+        <div class="route-sequence">
+          <p class="eyebrow">PREDICTED ARC SEQUENCE</p>
+          <code id="arcSequence">—</code>
+        </div>
+      </section>
+    </main>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="app.js"></script>
+  </body>
+</html>
