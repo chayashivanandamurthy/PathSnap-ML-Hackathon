@@ -1,0 +1,6 @@
+model,status,accuracy,precision,recall,f1_score,log_loss,top1_accuracy,candidate_miss_rate,training_time_seconds,inference_time_seconds
+LogisticRegression,pending,,,,,,,,,
+KNeighbors,pending,,,,,,,,,
+DecisionTree,pending,,,,,,,,,
+RandomForest,pending,,,,,,,,,
+HistGradientBoosting,pending,,,,,,,,,
