@@ -1,0 +1,40 @@
+
+PATHSNAP - PART 1
+DATA PREPROCESSING REPORT
+================================
+
+Sample Trip ID: 00000001
+
+1. DATASET SIZES
+GPS observations: 1315
+Road network nodes: 88809
+Road network arcs: 165790
+Ground-truth route arcs: 525
+
+2. MISSING VALUES
+GPS: 0
+Nodes: 0
+Arcs: 0
+Route: 0
+
+3. DUPLICATES
+GPS rows: 0
+Node rows: 8
+Arc rows: 292
+
+4. TIMESTAMP ANALYSIS
+Minimum gap: 1.0 seconds
+Maximum gap: 16.0 seconds
+One-second intervals: 1289
+Other intervals: 25
+
+5. COORDINATE RANGE
+Longitude: 8.570524 to 8.64786
+Latitude: 49.844053 to 50.211882
+
+6. ID VALIDATION
+Invalid node IDs: 0
+Invalid route arc IDs: 0
+
+================================
+END OF REPORT
