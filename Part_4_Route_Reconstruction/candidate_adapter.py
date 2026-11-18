@@ -1,7 +1,7 @@
 """Adapter between candidate generation/model scoring and HMM decoding.
 
 Member 1's candidate CSV supplies one row per (GPS observation, candidate arc).
-Member 3 must add a calibrated ``model_probability`` column without changing
+Member 3 must add a non-negative ``prediction_score`` column without changing
 ``trip_id``, ``observation_id`` or ``candidate_arc_id``. This adapter groups
 those rows back into one candidate set per raw GPS observation.
 """
@@ -39,13 +39,17 @@ def load_decoding_input(
     scored_candidates_csv: str | Path,
     track_path: str | Path,
     trip_id: str,
-    probability_column: str = "model_probability",
+    probability_column: str = "prediction_score",
 ) -> DecodingInput:
     """Load one trip from model-scored candidates and its original ``.track``.
 
     The raw track is authoritative for observation count and order. This means
     an observation omitted by candidate generation remains visible to the HMM
     as an empty candidate set instead of shifting every later prediction.
+
+    Scores are normalised within each observation's candidate set. Member 3 may
+    therefore export either calibrated candidate-correctness probabilities or
+    non-negative ranking scores; the HMM receives an emission distribution.
     """
     grouped = _read_scored_candidates(scored_candidates_csv, trip_id, probability_column)
     observations = _read_track(track_path)
@@ -65,7 +69,7 @@ def decode_scored_trip(
     scored_candidates_csv: str | Path,
     track_path: str | Path,
     trip_id: str,
-    probability_column: str = "model_probability",
+    probability_column: str = "prediction_score",
 ) -> tuple[DecodingInput, DecodingResult]:
     """Load and decode one trip using the exact candidate IDs scored by a model."""
     decoding_input = load_decoding_input(scored_candidates_csv, track_path, trip_id, probability_column)
@@ -94,8 +98,8 @@ def _read_scored_candidates(
                 candidate = CandidateScore(int(row["candidate_arc_id"]), float(row[probability_column]))
             except (TypeError, ValueError) as error:
                 raise ValueError(f"Could not parse scored candidate CSV row {row_number}.") from error
-            if not isfinite(candidate.probability) or not 0.0 <= candidate.probability <= 1.0:
-                raise ValueError(f"Row {row_number} has an invalid {probability_column} value.")
+            if not isfinite(candidate.probability) or candidate.probability < 0.0:
+                raise ValueError(f"Row {row_number} has an invalid {probability_column} value; scores must be finite and non-negative.")
 
             known = grouped.get(observation_id)
             if known is None:
@@ -104,7 +108,16 @@ def _read_scored_candidates(
                 known_observation, candidates = known
                 _validate_observation_alignment(known_observation, observation, observation_id)
                 candidates.append(candidate)
-    return grouped
+    normalised: dict[int, tuple[tuple[float, float, float], list[CandidateScore]]] = {}
+    for observation_id, (observation, candidates) in grouped.items():
+        total_score = sum(candidate.probability for candidate in candidates)
+        if total_score <= 0.0:
+            raise ValueError(f"All {probability_column} values are zero for observation {observation_id}.")
+        normalised[observation_id] = (
+            observation,
+            [CandidateScore(candidate.arc_id, candidate.probability / total_score) for candidate in candidates],
+        )
+    return normalised
 
 
 def _read_track(track_path: str | Path) -> list[tuple[float, float, float]]:

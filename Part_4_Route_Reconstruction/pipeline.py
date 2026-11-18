@@ -21,13 +21,14 @@ def reconstruct_trip(
     trip_id: str,
     scored_candidates_csv: str | Path,
     config: HMMConfig | None = None,
-    probability_column: str = "model_probability",
+    probability_column: str = "prediction_score",
 ) -> dict:
     """Decode one trip and return the prediction-side response for the UI.
 
     ``data_root`` contains the raw ``train`` and ``student_test`` folders.
     ``scored_candidates_csv`` is Member 1's candidate CSV after Member 3 adds
-    the requested probability column. No ``.route`` file is read here, keeping
+    the requested score column. Scores are normalised candidate-by-candidate
+    within an observation. No ``.route`` file is read here, keeping
     reference labels outside the inference response.
     """
     if partition not in {"train", "student_test"}:

@@ -23,11 +23,11 @@ class PipelineTests(unittest.TestCase):
 
             scored_candidates = root / "scored_candidates.csv"
             with scored_candidates.open("w", newline="", encoding="utf-8") as destination:
-                writer = csv.DictWriter(destination, fieldnames=["trip_id", "observation_id", "candidate_arc_id", "timestamp", "longitude", "latitude", "model_probability"])
+                writer = csv.DictWriter(destination, fieldnames=["trip_id", "observation_id", "candidate_arc_id", "timestamp", "longitude", "latitude", "prediction_score"])
                 writer.writeheader()
                 writer.writerows([
-                    {"trip_id": "00000000", "observation_id": 0, "candidate_arc_id": 0, "timestamp": 0, "longitude": 77.0, "latitude": 12.0, "model_probability": 0.9},
-                    {"trip_id": "00000000", "observation_id": 1, "candidate_arc_id": 1, "timestamp": 1, "longitude": 77.001, "latitude": 12.0, "model_probability": 0.9},
+                    {"trip_id": "00000000", "observation_id": 0, "candidate_arc_id": 0, "timestamp": 0, "longitude": 77.0, "latitude": 12.0, "prediction_score": 0.9},
+                    {"trip_id": "00000000", "observation_id": 1, "candidate_arc_id": 1, "timestamp": 1, "longitude": 77.001, "latitude": 12.0, "prediction_score": 0.9},
                 ])
 
             payload = reconstruct_trip(root, "student_test", "00000000", scored_candidates)
